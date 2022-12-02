@@ -71,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final AnalogGyroSim m_gyroSim = new AnalogGyroSim(m_gyro);
   private final EncoderSim m_leftEncoderSim = new EncoderSim(m_leftEncoder);
   private final EncoderSim m_rightEncoderSim = new EncoderSim(m_rightEncoder);
-  // private final Field2d m_fieldSim = new Field2d();
+  private final Field2d m_fieldSim = new Field2d();
   private final LinearSystem<N2, N2, N2> m_drivetrainSystem =
        LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3);
    private final DifferentialDrivetrainSim m_drivetrainSimulator =
@@ -94,13 +94,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_odometry =
         new DifferentialDriveOdometry(
             m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
-    // SmartDashboard.putData("Field", m_fieldSim);
+    SmartDashboard.putData("Field", m_fieldSim);
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    // m_fieldSim.setRobotPose(m_odometry.getPoseMeters());
+    m_fieldSim.setRobotPose(m_odometry.getPoseMeters());
     m_odometry.update(
         m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
   }
@@ -115,12 +115,14 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftMotors.get() * RobotController.getInputVoltage(),
     m_rightMotors.get() * RobotController.getInputVoltage());
     m_drivetrainSimulator.update(0.02);
+    // m_drivetrainSimulator.setState(null);
 
     m_leftEncoderSim.setDistance(m_drivetrainSimulator.getLeftPositionMeters());
     m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
     m_rightEncoderSim.setDistance(m_drivetrainSimulator.getRightPositionMeters());
     m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
     m_gyroSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
+    // m_drivetrainSimulator.
     }
 
   /**
@@ -150,7 +152,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_drivetrainSimulator.setPose(pose);
     resetEncoders();
     m_odometry.resetPosition(
-        m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance(), pose);
+      pose.getRotation(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance(), pose);
   }
 
   /**
@@ -220,6 +222,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
+    m_gyro.
   }
 
   /**

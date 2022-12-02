@@ -5,6 +5,11 @@
         "header": {
           "open": true
         }
+      },
+      "AnalogGyro[0]": {
+        "header": {
+          "open": true
+        }
       }
     }
   },
@@ -13,9 +18,27 @@
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PPRamseteCommand_field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/PPRamseteCommand_field": {
+        "traj": {
+          "arrowSize": 39,
+          "arrowWeight": 1.0,
+          "arrows": false,
+          "weight": 1.0
+        }
+      }
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "Retained Values": {
       "open": false
     }
