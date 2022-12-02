@@ -115,14 +115,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftMotors.get() * RobotController.getInputVoltage(),
     m_rightMotors.get() * RobotController.getInputVoltage());
     m_drivetrainSimulator.update(0.02);
-    // m_drivetrainSimulator.setState(null);
 
     m_leftEncoderSim.setDistance(m_drivetrainSimulator.getLeftPositionMeters());
     m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
     m_rightEncoderSim.setDistance(m_drivetrainSimulator.getRightPositionMeters());
     m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
     m_gyroSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
-    // m_drivetrainSimulator.
     }
 
   /**

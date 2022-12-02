@@ -31,6 +31,9 @@
           "arrowWeight": 1.0,
           "arrows": false,
           "weight": 1.0
+        },
+        "window": {
+          "visible": true
         }
       }
     }

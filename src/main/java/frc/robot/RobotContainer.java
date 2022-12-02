@@ -80,11 +80,16 @@ public class RobotContainer {
     String robot_path = "Example Path"; // replace with auto selector 
     PathPlannerTrajectory examplePath = PathPlanner.loadPath(robot_path, new PathConstraints(4, 3));
 
-
+    // Prints for running in simulation, you can comment these our if you want 
     System.out.print("========== Starting Auto ==========\n");
     System.out.print("Path: " + robot_path + "\n");
     System.out.print("\n\n");
-    
+
+    /**
+     *  This HashMap is for all of your manipulator commands tu run durring your autos 
+     *  first argument is the command name you set in PathPlanner
+     *  second argument is the command in jave you want to run, for this example we are doing a print
+     */
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeOn", new PrintCommand("Intake On"));
     eventMap.put("intakeOff", new PrintCommand("Intake Off"));
@@ -94,9 +99,10 @@ public class RobotContainer {
     eventMap.put("shooterOff", new PrintCommand("Shooter Off"));
     eventMap.put("wait", new PrintCommand("Waiting"));
 
+    // Reset our robots odometry to where our aut is starting from 
     m_robotDrive.resetOdometry(examplePath.getInitialPose());
 
-    // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
+    // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command.
     RamseteAutoBuilder autoBuilder = new RamseteAutoBuilder(
         m_robotDrive::getPose, // Pose2d supplier
         m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
