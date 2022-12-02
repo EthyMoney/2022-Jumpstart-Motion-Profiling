@@ -80,12 +80,12 @@ public class RobotContainer {
     String robot_path = "Example Path"; // replace with auto selector 
     PathPlannerTrajectory examplePath = PathPlanner.loadPath(robot_path, new PathConstraints(4, 3));
 
-    
+
     System.out.print("========== Starting Auto ==========\n");
     System.out.print("Path: " + robot_path + "\n");
     System.out.print("\n\n");
-    HashMap<String, Command> eventMap = new HashMap<>();
     
+    HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeOn", new PrintCommand("Intake On"));
     eventMap.put("intakeOff", new PrintCommand("Intake Off"));
     eventMap.put("intakeUp", new PrintCommand("Intake Up"));
