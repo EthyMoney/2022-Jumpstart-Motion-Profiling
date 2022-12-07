@@ -8,7 +8,9 @@ import static edu.wpi.first.wpilibj.XboxController.Button;
 
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import java.io.File;
 import java.util.HashMap;
 
 import com.pathplanner.lib.PathConstraints;
@@ -41,10 +44,40 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
+  SendableChooser<String> autoChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    // Get all of the paths from the pathplanner folde rand present it on the dashboard   
+    // Shuffleboard Dashboard
+    autoChooser.setDefaultOption("Drive Forwards", "Drive Forwards");
+
+    try {
+        // Create a file object
+        File f = new File("./src/main/deploy/pathplanner");
+
+        // Get all the names of the files present
+        // in the given directory
+        File[] files = f.listFiles();
+        System.out.println("Files are:");
+        // Display the names of the files
+        for (int i = 0; i < files.length; i++) {
+            String file_name = files[i].getName();
+            String file_extention = file_name.substring(file_name.length() - 5, file_name.length());
+            String path_name = file_name.substring(0, file_name.length() - 5);
+            if (file_extention.equals(".path")){
+              autoChooser.addOption(path_name, path_name);
+            }
+        }
+    }
+    catch (Exception e) {
+        System.err.println(e.getMessage());
+    }
+
+    SmartDashboard.putData("Autonomous routine", autoChooser);
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
@@ -77,12 +110,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    String robot_path = "Example Path"; // replace with auto selector 
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath(robot_path, new PathConstraints(4, 3));
+    String autoName = autoChooser.getSelected();
+    PathPlannerTrajectory examplePath = PathPlanner.loadPath(autoName, new PathConstraints(4, 3));
 
     // Prints for running in simulation, you can comment these our if you want 
     System.out.print("========== Starting Auto ==========\n");
-    System.out.print("Path: " + robot_path + "\n");
+    System.out.print("Path: " + autoName + "\n");
     System.out.print("\n\n");
 
     /**
