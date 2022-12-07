@@ -7,6 +7,8 @@ package frc.robot;
 import static edu.wpi.first.wpilibj.XboxController.Button;
 
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -29,6 +31,7 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
 /**
@@ -111,8 +114,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     String autoName = autoChooser.getSelected();
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath(autoName, new PathConstraints(4, 3));
-
+    PathPlannerTrajectory examplePath;
+    examplePath = PathPlanner.loadPath(autoName, new PathConstraints(4, 3));
+    
+    // If the path you gave is not in the list, drive forward  
+    if (examplePath == null) {
+      examplePath = PathPlanner.generatePath(
+        new PathConstraints(4, 3), 
+        new PathPoint(new Translation2d(1.0, 3.0), Rotation2d.fromDegrees(0)), // position, heading
+        new PathPoint(new Translation2d(3.0, 3.0), Rotation2d.fromDegrees(0)) // position, heading
+    );
+    }
     // Prints for running in simulation, you can comment these our if you want 
     System.out.print("========== Starting Auto ==========\n");
     System.out.print("Path: " + autoName + "\n");
